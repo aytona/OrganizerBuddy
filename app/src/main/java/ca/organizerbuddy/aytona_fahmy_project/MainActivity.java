@@ -36,6 +36,8 @@ public class MainActivity extends Activity {
         edtName = findViewById(R.id.edt_username);
         edtPass = findViewById(R.id.edt_password);
 
+
+
         btnRegister = findViewById(R.id.btn_newUser);
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,6 +129,7 @@ public class MainActivity extends Activity {
             }
         }
     }
+
 
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
