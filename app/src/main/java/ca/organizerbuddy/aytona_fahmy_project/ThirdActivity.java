@@ -24,6 +24,8 @@ public class ThirdActivity extends Activity {
 
     }
 
+
+
     public void find_weather()
     {
         String url ="https://www.theweathernetwork.com";
