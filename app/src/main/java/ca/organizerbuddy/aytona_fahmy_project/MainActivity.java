@@ -75,19 +75,25 @@ public class MainActivity extends Activity {
 
     // Just goes to the create account activity
     private void CreateAccountActivity() {
-        // TODO change startActivityForResult, result being the new user created that will auto fill the texts
-        Intent intent = new Intent(getApplicationContext(),SecondActivity.class);
-        startActivity(intent);
+        Intent intent = new Intent(this, SecondActivity.class);
+        startActivityForResult(intent, CREATE_ACTIVITY);
+    }
+
+    private void GetAccountInfo(Intent data) {
+        Account account = data.getParcelableExtra(ACCOUNT_LOGIN);
+        edtName.setText(account.getUsername());
+        edtPass.setText(account.getPassword());
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ACCOUNT_ACTIVITY) {
-            if (resultCode == RESULT_OK) {
-                Account account = data.getParcelableExtra(ACCOUNT_LOGIN);
-                edtName.setText(account.getUsername());
-                edtPass.setText(account.getPassword());
+        if (resultCode == RESULT_OK) {
+            GetAccountInfo(data);
+            if (requestCode == ACCOUNT_ACTIVITY) {
                 Toast.makeText(getApplicationContext(), "Successfully logged out", Toast.LENGTH_LONG).show();
+            }
+            if (requestCode == CREATE_ACTIVITY) {
+                Toast.makeText(getApplicationContext(), "Account successfully created", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -98,11 +104,11 @@ public class MainActivity extends Activity {
         @Override
         protected Account doInBackground(String[]... strings) {
             AccountRoomDb accountRoomDb = AccountRoomDb.getDatabase(getApplicationContext());
-            AccountDao accountDao = accountRoomDb.empoyeeDao();
+            AccountDao accountDao = accountRoomDb.accountDao();
             if (!accountDao.getAllAccounts().isEmpty()) {
                 for (Account temp : accountDao.getAllAccounts()) {
-                    if (temp.getUsername().equals(strings[0])
-                        && temp.getPassword().equals(strings[1])) {
+                    if (temp.getUsername().equals(strings[0][0])
+                        && temp.getPassword().equals(strings[0][1])) {
                         return temp;
                     }
                 }
@@ -113,7 +119,7 @@ public class MainActivity extends Activity {
         @Override
         protected void onPostExecute(Account account) {
             if (account != null) {
-                Intent intent = new Intent();
+                Intent intent = new Intent(getApplicationContext(), ThirdActivity.class);
                 intent.putExtra(ACCOUNT_LOGIN, account);
                 startActivityForResult(intent, ACCOUNT_ACTIVITY);
             } else {
